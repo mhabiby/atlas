@@ -1,0 +1,23 @@
+/* High-priority temporary overrides to reveal UI while debugging */
+html, body, #root {
+  height: 100% !important;
+  margin: 0 !important;
+  background: #000 !important;
+  color: #ffd400 !important; /* yellow primary text */
+  -webkit-font-smoothing: antialiased !important;
+}
+* {
+  color: inherit !important;
+  background-color: transparent !important;
+  visibility: visible !important;
+  display: revert !important;
+}
+
+/* Make main layout visible and scrollable */
+.main-grid, .gpt-app-root, .gpt-assistant, .chat-window, .left-panel, .right-column {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  height: auto !important;
+  background: transparent !important;
+}

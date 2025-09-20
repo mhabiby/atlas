@@ -1,0 +1,12 @@
+flask
+flask-cors
+python-dotenv
+sentence-transformers
+numpy
+openai
+faiss-cpu
+PyYAML
+
+# test / integration
+pytest
+requests

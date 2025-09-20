@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "name": { "en": "Dr. Nadia", "ar": "الدكتورة نادية" },
+    "specialty": "Cardiology",
+    "bio": "Cardiologist with 15 years experience treating ischemic heart disease and hypertension.",
+    "experience": "15 years",
+    "office": "A-12",
+    "floor": 3,
+    "session_price": 150,
+    "contact": "nadia@example.com",
+    "phone": "+212600123456",
+    "availability": "Monday to Friday, 9 AM - 5 PM"
+  },
+  {
+    "id": 2,
+    "name": { "en": "Dr. Youssef", "ar": "الدكتور يوسف" },
+    "specialty": "Pediatrics",
+    "bio": "Pediatrician focusing on child growth and immunizations.",
+    "experience": "10 years",
+    "office": "B-03",
+    "floor": 1,
+    "session_price": 120,
+    "contact": "youssef@example.com",
+    "phone": "+212600654321",
+    "availability": "Monday to Saturday, 10 AM - 6 PM"
+  }
+]

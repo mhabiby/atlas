@@ -1,0 +1,170 @@
+Atlas Prototype — How to run (Windows)
+
+Files to check/update before running:
+- server/semantic_search.py  (backend service)
+- server/doctors.json       (doctor records)
+- .env                      (project root — contains OPENAI_API_KEY)
+- src/GptAssistant.jsx / src/GptAssistant.css / src/App.jsx (frontend)
+- package.json              (frontend scripts & deps)
+
+1) Set up Python environment (recommended: use virtualenv or conda)
+- Using virtualenv:
+  python -m venv .venv
+  .venv\Scripts\Activate.ps1  # PowerShell
+- Or conda:
+  conda create -n atlas python=3.10
+  conda activate atlas
+
+2) Install Python dependencies
+- Preferred (if using pip):
+  pip install -r requirements.txt
+
+- Note about faiss on Windows:
+  If pip install faiss-cpu fails on Windows, install via conda:
+    conda install -c conda-forge faiss-cpu
+  Then re-run: pip install -r requirements.txt (skip faiss if already satisfied).
+
+3) Configure environment variables
+- Create project root .env with:
+  OPENAI_API_KEY=sk-REPLACE_WITH_YOUR_KEY
+  EMBED_MODEL=all-MiniLM-L6-v2
+  TOP_K=3
+
+- PowerShell one-liner (replace key):
+  Set-Content -Path .env -Value "OPENAI_API_KEY=sk-YOUR_KEY`nEMBED_MODEL=all-MiniLM-L6-v2`nTOP_K=3"
+
+4) Start backend (Flask)
+- From project root:
+  cd server
+  python semantic_search.py
+- Verify health:
+  Open: http://localhost:5001/health
+  Expected JSON shows index_built, docs_count, openai_key_set.
+
+5) Start frontend (Vite/React)
+- From project root:
+  npm install
+  npm run dev
+- Open the URL shown by Vite (usually http://localhost:5173).
+
+6) Use the app
+- Enter a question in the chat, or press the mic (Chrome recommended) to speak.
+- Check backend logs for "Received question: ..." and browser DevTools Network for POST http://localhost:5001/ask.
+
+7) Troubleshooting
+- "Warning: OPENAI_API_KEY not set" in backend logs:
+  Ensure .env contains OPENAI_API_KEY and restart backend.
+
+- FAISS / sentence-transformers errors:
+  Use conda for faiss-cpu on Windows:
+    conda install -c conda-forge faiss-cpu
+  Reinstall python packages in same environment.
+
+- Frontend shows "Sorry, something went wrong.":
+  Inspect Network tab on POST /ask, and check Flask logs for traceback. Copy the response body for debugging.
+
+- Web Speech API (microphone) not working:
+  Use Chrome, ensure page served over http(s) and allow microphone permission.
+
+8) Helpful commands (PowerShell)
+- Create venv and activate:
+  python -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+- Install Python deps:
+  pip install -r requirements.txt
+- Set .env:
+  Set-Content -Path .env -Value "OPENAI_API_KEY=sk-YOUR_KEY`nEMBED_MODEL=all-MiniLM-L6-v2`nTOP_K=3"
+- Start backend:
+  cd server
+  python semantic_search.py
+- Start frontend:
+  cd ..
+  npm install
+  npm run dev
+
+If you want, I can apply these files into your workspace now.// filepath: c:\Users\mothe\Documents\Atlas\atlas-prototype\HOW_TO.txt
+Atlas Prototype — How to run (Windows)
+
+Files to check/update before running:
+- server/semantic_search.py  (backend service)
+- server/doctors.json       (doctor records)
+- .env                      (project root — contains OPENAI_API_KEY)
+- src/GptAssistant.jsx / src/GptAssistant.css / src/App.jsx (frontend)
+- package.json              (frontend scripts & deps)
+
+1) Set up Python environment (recommended: use virtualenv or conda)
+- Using virtualenv:
+  python -m venv .venv
+  .venv\Scripts\Activate.ps1  # PowerShell
+- Or conda:
+  conda create -n atlas python=3.10
+  conda activate atlas
+
+2) Install Python dependencies
+- Preferred (if using pip):
+  pip install -r requirements.txt
+
+- Note about faiss on Windows:
+  If pip install faiss-cpu fails on Windows, install via conda:
+    conda install -c conda-forge faiss-cpu
+  Then re-run: pip install -r requirements.txt (skip faiss if already satisfied).
+
+3) Configure environment variables
+- Create project root .env with:
+  OPENAI_API=sk-REPLACE_WITH_YOUR_KEY
+  EMBED_MODEL=all-MiniLM-L6-v2
+  TOP_K=3
+
+- PowerShell one-liner (replace key):
+  Set-Content -Path .env -Value "OPENAI_API_KEY=sk-YOUR_KEY`nEMBED_MODEL=all-MiniLM-L6-v2`nTOP_K=3"
+
+4) Start backend (Flask)
+- From project root:
+  cd server
+  python semantic_search.py
+- Verify health:
+  Open: http://localhost:5001/health
+  Expected JSON shows index_built, docs_count, openai_key_set.
+
+5) Start frontend (Vite/React)
+- From project root:
+  npm install
+  npm run dev
+- Open the URL shown by Vite (usually http://localhost:5173).
+
+6) Use the app
+- Enter a question in the chat, or press the mic (Chrome recommended) to speak.
+- Check backend logs for "Received question: ..." and browser DevTools Network for POST http://localhost:5001/ask.
+
+7) Troubleshooting
+- "Warning: OPENAI_API_KEY not set" in backend logs:
+  Ensure .env contains OPENAI_API_KEY and restart backend.
+
+- FAISS / sentence-transformers errors:
+  Use conda for faiss-cpu on Windows:
+    conda install -c conda-forge faiss-cpu
+  Reinstall python packages in same environment.
+
+- Frontend shows "Sorry, something went wrong.":
+  Inspect Network tab on POST /ask, and check Flask logs for traceback. Copy the response body for debugging.
+
+- Web Speech API (microphone) not working:
+  Use Chrome, ensure page served over http(s) and allow microphone permission.
+
+8) Helpful commands (PowerShell)
+- Create venv and activate:
+  python -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+- Install Python deps:
+  pip install -r requirements.txt
+- Set .env:
+  Set-Content -Path .env -Value "OPENAI_API_KEY=sk-YOUR_KEY`nEMBED_MODEL=all-MiniLM-L6-v2`nTOP_K=3"
+- Start backend:
+  cd server
+  python semantic_search.py
+- Start frontend:
+  cd ..
+  npm install
+  npm run dev
+
+If you want, I can apply these

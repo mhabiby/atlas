@@ -1,0 +1,6 @@
+flask
+sentence-transformers
+torch
+faiss-cpu
+langchain
+openai
