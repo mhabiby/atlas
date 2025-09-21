@@ -1,5 +1,5 @@
-﻿# Node/JS example—edit to your stack
+﻿__pycache__/
+*.pyc
+.env
 node_modules/
 dist/
-.env
-.DS_Store
