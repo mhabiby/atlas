@@ -300,6 +300,20 @@
   border-radius: 8px;
 }
 
+/* selected doctor highlight */
+.result-row-compact.selected, .result-card.selected {
+  background: linear-gradient(90deg, rgba(34,197,94,0.18), rgba(34,197,94,0.05));
+  position: relative;
+}
+.result-row-compact.selected::after, .result-card.selected::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg,#22c55e,#16a34a);
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
 /* small polish */
 .card .muted { color:var(--muted); font-size:13px; margin-top:6px; }
 .placeholder { color:var(--muted); padding:18px; text-align:center; }

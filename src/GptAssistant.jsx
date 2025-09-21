@@ -7,6 +7,7 @@ import { DoctorPoster } from "./features/assistant/components/DoctorPoster";
 import { Suggestions } from "./features/assistant/components/Suggestions";
 import { InputBar } from "./features/assistant/components/InputBar";
 import { TopNav } from "./features/assistant/components/TopNav";
+import { DEBUG_TOOLS } from "./config";
 
 // Lazy loaded side panels (map & ads) for performance
 const MapPanel = lazy(() => import('./features/assistant/components/MapPanel'));
@@ -14,7 +15,7 @@ const AdsPanel = lazy(() => import('./features/assistant/components/AdsPanel'));
 
 export default function GptAssistant({ lang = "en" }) {
   const [currentLang, setCurrentLang] = useState(lang);
-  const { state, send, selectDoctor, clearChat } = useChatReducer(currentLang);
+  const { state, send, selectDoctor, clearChat, retrieveDebug } = useChatReducer(currentLang);
   const { messages, loading, selectedDoctor } = state;
 
   const copyText = async (t) => { try { await navigator.clipboard.writeText(t || ""); } catch {} };
@@ -46,6 +47,7 @@ export default function GptAssistant({ lang = "en" }) {
           <section id="chat" className="panel chat-column" aria-label="Conversation" tabIndex={-1}>
             <div className="panel-section grow" aria-live="polite">
               <MessageList
+                selectedDoctor={selectedDoctor}
                 messages={messages.map(m => ({
                   id: m.id,
                   role: m.role || m.sender,
@@ -61,7 +63,7 @@ export default function GptAssistant({ lang = "en" }) {
             </div>
             <div className="input-area panel-section" aria-label="Message input area">
               <Suggestions items={suggestions} onSend={send} />
-              <InputBar onSend={send} loading={loading} onClear={clearChat} />
+              <InputBar onSend={send} loading={loading} onClear={clearChat} currentLang={currentLang} onDebug={DEBUG_TOOLS ? retrieveDebug : undefined} />
             </div>
           </section>
 

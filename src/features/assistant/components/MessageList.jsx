@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { MessageItem } from './MessageItem';
 
-export function MessageList({ messages, onCopy, onSpeak, onSelectDoctor, loading }) {
+export function MessageList({ messages, onCopy, onSpeak, onSelectDoctor, loading, selectedDoctor }) {
   const endRef = useRef(null);
   const containerRef = useRef(null);
   const [atBottom, setAtBottom] = useState(true);
@@ -52,7 +52,7 @@ export function MessageList({ messages, onCopy, onSpeak, onSelectDoctor, loading
   return (
     <div className="messages-window flex-grow-1 overflow-auto mb-3 position-relative" role="log" aria-live="polite" ref={containerRef}>
       {enriched.map(m => (
-        <MessageItem key={m.id} m={m} onCopy={onCopy} onSpeak={onSpeak} onSelectDoctor={onSelectDoctor} />
+        <MessageItem key={m.id} m={m} onCopy={onCopy} onSpeak={onSpeak} onSelectDoctor={onSelectDoctor} selectedDoctor={selectedDoctor} />
       ))}
       {loading && (
         <div className="message skeleton-msg">

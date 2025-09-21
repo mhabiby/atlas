@@ -10,11 +10,14 @@ const SLASH_COMMANDS = [
   { cmd: '/summary', desc: 'Summarize last answer' }
 ];
 
-export function InputBar({ onSend, loading, onClear, onCommand }) {
+export function InputBar({ onSend, loading, onClear, onCommand, currentLang='en', onDebug }) {
   const [value, setValue] = useState('');
   const [recording, setRecording] = useState(false);
   const [showSlash, setShowSlash] = useState(false);
+  const [interim, setInterim] = useState('');
+  const recognitionRef = useRef(null);
   const [slashIndex, setSlashIndex] = useState(0);
+  const [autoSend, setAutoSend] = useState(true);
   const taRef = useRef(null);
   const listRef = useRef(null);
   const maxLines = 8;
@@ -59,6 +62,12 @@ export function InputBar({ onSend, loading, onClear, onCommand }) {
     setValue('');
   };
 
+  const submitDebug = () => {
+    if(!value.trim() || loading) return;
+    onDebug && onDebug(value);
+    setValue('');
+  };
+
   const handleKey = (e) => {
     if(showSlash && ['ArrowDown','ArrowUp','Tab'].includes(e.key)) {
       e.preventDefault();
@@ -74,20 +83,76 @@ export function InputBar({ onSend, loading, onClear, onCommand }) {
     if(e.key==='Escape' && showSlash){ setShowSlash(false); }
   };
 
+  // Initialize speech recognition lazily
+  const initRecognition = () => {
+    if(recognitionRef.current) return recognitionRef.current;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRecognition) return null;
+    const rec = new SpeechRecognition();
+  rec.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+    rec.interimResults = true;
+    rec.continuous = false;
+    rec.maxAlternatives = 1;
+    rec.onresult = (e) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      for(let i=0;i<e.results.length;i++) {
+        const res = e.results[i];
+        if(res.isFinal) finalTranscript += res[0].transcript;
+        else interimTranscript += res[0].transcript;
+      }
+      if(interimTranscript) setInterim(interimTranscript);
+      if(finalTranscript) {
+        setInterim('');
+        setValue(v => v ? (v.trim() + ' ' + finalTranscript.trim()) : finalTranscript.trim());
+      }
+    };
+    rec.onerror = () => { setRecording(false); setInterim(''); };
+    rec.onend = () => {
+      setRecording(false);
+      setInterim('');
+      // Auto-send optional
+      if(autoSend) {
+        setTimeout(()=>{ if(value.trim()) submit(); }, 120);
+      }
+    };
+    recognitionRef.current = rec;
+    return rec;
+  };
+
+  const stopRecognition = () => {
+    const rec = recognitionRef.current; if(rec) { try { rec.stop(); } catch(_){} }
+  };
+
+  const startRecognition = () => {
+    const rec = initRecognition();
+    if(!rec) { console.warn('SpeechRecognition not supported'); return; }
+    try { rec.start(); } catch(_) {}
+  };
+
   const toggleRecording = () => {
     if(loading) return;
-    setRecording(r=>!r);
-    // Placeholder: handle actual audio start/stop later
+    setRecording(r => {
+      const next = !r;
+      if(next) { startRecognition(); }
+      else { stopRecognition(); }
+      return next;
+    });
   };
 
   const clearText = () => setValue('');
 
   return (
     <div className="chat-input-shell enhanced" role="group" aria-label="Chat input with voice and commands">
-      <button type="button" className={`icon-btn mic ${recording ? 'recording' : ''}`} aria-pressed={recording} aria-label={recording ? 'Stop recording' : 'Start recording'} onClick={toggleRecording} disabled={loading}>
+      <button type="button" className={`icon-btn mic ${recording ? 'recording' : ''}`} aria-pressed={recording} aria-label={recording ? 'Stop recording' : 'Start recording'} onClick={toggleRecording} disabled={loading} title={autoSend ? 'Voice (auto-send ON)' : 'Voice (auto-send OFF)'}>
         {recording ? <FaStop /> : <FaMicrophone />}
         <span className="pulse" aria-hidden />
       </button>
+      <div className="d-flex flex-column align-items-center me-2" style={{gap:4}}>
+        <label className="small mono" style={{fontSize:10, opacity:.7}}>
+          <input type="checkbox" checked={autoSend} onChange={()=>setAutoSend(a=>!a)} style={{marginRight:4}} />auto
+        </label>
+      </div>
       <div className="input-stack flex-grow-1 position-relative">
         <textarea
           ref={taRef}
@@ -103,6 +168,9 @@ export function InputBar({ onSend, loading, onClear, onCommand }) {
           aria-expanded={showSlash}
           aria-owns={showSlash ? 'slash-suggestions' : undefined}
         />
+        {recording && !!interim && (
+          <div className="interim-transcript" aria-live="polite">{interim}</div>
+        )}
         {!!value && (
           <button type="button" className="clear-x" aria-label="Clear text" onClick={clearText}><FaTimes /></button>
         )}
@@ -120,6 +188,9 @@ export function InputBar({ onSend, loading, onClear, onCommand }) {
       <button type="button" className="icon-btn send" aria-label={loading ? 'Stop generation' : 'Send message'} disabled={!value.trim() && !loading} onClick={loading ? ()=>{} : submit}>
         {loading ? <FaStop /> : <FaPaperPlane />}
       </button>
+      {onDebug && (
+        <button type="button" className="icon-btn" style={{marginLeft:8}} title="Retrieval debug (no LLM)" aria-label="Retrieval debug" disabled={!value.trim() || loading} onClick={submitDebug}>DBG</button>
+      )}
     </div>
   );
 }

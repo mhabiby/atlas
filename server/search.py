@@ -30,11 +30,15 @@ class VectorSearch:
     def _doc_to_text(self, d):
         name = d.get("name", {})
         name_en = name.get("en") if isinstance(name, dict) else name
+        name_ar = name.get("ar") if isinstance(name, dict) else ""
+        bio = d.get("bio", "") or ""
+        # Duplicate bilingual fields so Arabic queries match
         parts = [
-            str(name_en or d.get("full_name","")).strip(),
-            str(d.get("specialty","")).strip(),
-            str(d.get("bio","")).strip(),
-            str(d.get("availability","")).strip()
+            str(name_en or d.get("full_name","" )).strip(),
+            str(name_ar).strip(),
+            str(d.get("specialty","" )).strip(),
+            str(bio).strip(),
+            str(d.get("availability","" )).strip()
         ]
         return ". ".join([p for p in parts if p])
 
