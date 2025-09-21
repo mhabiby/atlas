@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaMountain } from 'react-icons/fa';
+// removed mountain icon branding
 
 const NAV_ITEMS = [
   { id: 'chat', label: 'Chat' },
@@ -29,9 +29,8 @@ export function TopNav({ lang = 'en', onChangeLang }) {
   };
 
   return (
-    <nav className="top-nav-bar" aria-label="Primary">
-      <div className="nav-brand"><FaMountain className="brand-icon" /> Atlas Potal <span className="version-tag">Beta</span></div>
-      <ul className="nav-items" role="menubar">
+  <nav className="top-nav-bar" aria-label="Primary">
+  <ul className="nav-items" role="menubar" style={{marginLeft:0}}>
         {NAV_ITEMS.map(item => (
           <li key={item.id} role="none">
             <button
